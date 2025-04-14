@@ -21,7 +21,7 @@ public class ProductController {
     @Autowired
     private KafkaTemplate<String, Product> kafkaTemplate;
 
-    @Value("${kafka.topics.product}")
+    @Value("${kafka.topics.product.created}")
     private static String TOPIC;
 
     @GetMapping
