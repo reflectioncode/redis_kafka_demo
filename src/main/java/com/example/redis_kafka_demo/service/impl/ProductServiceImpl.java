@@ -4,6 +4,7 @@ import com.example.redis_kafka_demo.model.entity.Product;
 import com.example.redis_kafka_demo.repository.ProductRepository;
 import com.example.redis_kafka_demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +16,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).getContent();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Optional<Product> getProductById(Long id) {

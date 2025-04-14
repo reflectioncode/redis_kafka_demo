@@ -4,6 +4,7 @@ import com.example.redis_kafka_demo.model.entity.Product;
 import com.example.redis_kafka_demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ProductController {
     private static String TOPIC;
 
     @GetMapping
-    public List<Product> getAllProducts(Pageable pageable) {
+    public Page<Product> getAllProducts(Pageable pageable) {
         return productService.getAllProducts(pageable);
     }
 
