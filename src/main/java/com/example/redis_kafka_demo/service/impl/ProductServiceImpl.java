@@ -20,5 +20,9 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
+
+    public void saveProduct(Product product) {
+        productRepository.save(product);
+    }
 }
 
