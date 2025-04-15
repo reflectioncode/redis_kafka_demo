@@ -33,8 +33,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public void saveProduct(Product product) {
-        kafkaTemplate.send(ADDED_PRODUCTS_TOPIC, product);
         productRepository.save(product);
+        kafkaTemplate.send(ADDED_PRODUCTS_TOPIC, product);
     }
 }
 

@@ -17,7 +17,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-
     @GetMapping
     public Page<Product> getAllProducts(Pageable pageable) {
         return productService.getAllProducts(pageable);

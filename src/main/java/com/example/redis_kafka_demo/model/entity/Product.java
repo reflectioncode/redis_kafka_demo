@@ -2,8 +2,8 @@ package com.example.redis_kafka_demo.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "product")
+@NoArgsConstructor
 public class Product {
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -27,9 +28,6 @@ public class Product {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public Product() {
-    }
 
     @PrePersist
     protected void onCreate() {
