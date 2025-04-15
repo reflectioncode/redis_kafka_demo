@@ -2,4 +2,4 @@ kafka:
   topics:
     product:
       created: "added_products"
-      deleted: "removed_products"
+      removed: "deleted_products"
