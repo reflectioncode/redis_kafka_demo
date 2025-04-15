@@ -23,7 +23,7 @@ public class ProductController {
     private KafkaTemplate<String, Product> kafkaTemplate;
 
     @Value("${kafka.topics.product.created}")
-    private static String TOPIC;
+    private static String ADDED_PRODUCTS_TOPIC;
 
     @GetMapping
     public Page<Product> getAllProducts(Pageable pageable) {
@@ -40,7 +40,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> createProduct(@RequestBody Product product) {
         productService.saveProduct(product);
-        kafkaTemplate.send(TOPIC, product);
+        kafkaTemplate.send(ADDED_PRODUCTS_TOPIC, product);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
