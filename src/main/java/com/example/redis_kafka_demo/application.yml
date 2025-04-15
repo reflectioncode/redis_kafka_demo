@@ -1,5 +1,0 @@
-kafka:
-  topics:
-    product:
-      created: "added_products"
-      removed: "deleted_products"

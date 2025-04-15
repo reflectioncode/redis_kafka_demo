@@ -1,9 +1,9 @@
 package com.example.redis_kafka_demo.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.Id;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,8 +12,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "product")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,9 +31,6 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Product() {
-    }
-
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -39,5 +39,18 @@ public class Product {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    @JsonCreator
+    public Product(@JsonProperty("id") Long id,
+                   @JsonProperty("name") String name,
+                   @JsonProperty("description") String description,
+                   @JsonProperty("price") BigDecimal price,
+                   @JsonProperty("quantity") Integer quantity) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
     }
 }
