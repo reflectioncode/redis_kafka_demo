@@ -1,0 +1,5 @@
+kafka:
+  topics:
+    product:
+      created: "added-products-event-topic"
+      removed: "deleted-products-event-topic"
