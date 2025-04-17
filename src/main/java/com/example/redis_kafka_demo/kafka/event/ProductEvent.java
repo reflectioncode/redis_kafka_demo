@@ -1,6 +1,8 @@
 package com.example.redis_kafka_demo.kafka.event;
 
 import com.example.redis_kafka_demo.dto.ProductDto;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,11 +11,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ProductEvent {
-    private String eventType; // CREATED, UPDATED, DELETED
+    private String eventType;
     private ProductDto product;
 
-    public ProductEvent(String created, ProductDto dto) {
+    @JsonCreator
+    public ProductEvent(
+            @JsonProperty("eventType") String eventType,
+            @JsonProperty("product") ProductDto product
+    ) {
+        this.eventType = eventType;
+        this.product = product;
     }
 
-    // Getters и Setters
 }

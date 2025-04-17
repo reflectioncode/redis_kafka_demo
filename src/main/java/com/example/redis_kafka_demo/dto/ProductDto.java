@@ -14,6 +14,14 @@ public class ProductDto {
     private BigDecimal price;
     private Integer quantity;
 
-    // Getters и Setters
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                '}';
+    }
 }
 
