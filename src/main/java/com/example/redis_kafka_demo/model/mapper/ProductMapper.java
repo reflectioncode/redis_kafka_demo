@@ -1,5 +1,5 @@
 package com.example.redis_kafka_demo.model.mapper;
-import com.example.redis_kafka_demo.model.dto.request.ProductCreateRequestDto;
+import com.example.redis_kafka_demo.model.dto.request.ProductDto;
 import com.example.redis_kafka_demo.model.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,5 +12,5 @@ public interface ProductMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Product toEntity(ProductCreateRequestDto dto);
+    Product toEntity(ProductDto dto);
 }

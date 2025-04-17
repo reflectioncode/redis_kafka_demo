@@ -1,6 +1,6 @@
 package com.example.redis_kafka_demo.controller;
 
-import com.example.redis_kafka_demo.model.dto.request.ProductCreateRequestDto;
+import com.example.redis_kafka_demo.model.dto.request.ProductDto;
 import com.example.redis_kafka_demo.model.entity.Product;
 import com.example.redis_kafka_demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +18,8 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody ProductCreateRequestDto dto) {
+    public ResponseEntity createProduct(@RequestBody ProductDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(dto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
@@ -41,4 +35,15 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductDto dto) {
+            Product updatedProduct = productService.updateProduct(id, dto);
+            return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreateRequestDto {
+public class ProductDto {
     @NotBlank(message = "Имя является обязательным параметром!")
     private String name;
     @NotBlank(message = "Описание является обязательным параметром!")
