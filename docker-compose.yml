@@ -19,8 +19,18 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://host.docker.internal:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - ./create-topics.sh:/create-topics.sh
+    command: >
+      sh -c "
+        /etc/confluent/docker/run &
+        while ! nc -z localhost 9092; do sleep 1; done;
+        sleep 5;
+        bash /create-topics.sh;
+        wait
+      "
 
   redis:
     image: redis:7.0

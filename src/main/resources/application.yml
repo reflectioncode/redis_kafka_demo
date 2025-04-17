@@ -18,9 +18,11 @@ spring:
       port: 6379
 
 kafka:
-  bootstrap-servers: localhost:9092
+  bootstrap-servers: host.docker.internal:9092
   topic:
-    product-events: product-events
+    product-events:
+      partitions: 3
+      replication-factor: 1
 
 logging:
   level:
