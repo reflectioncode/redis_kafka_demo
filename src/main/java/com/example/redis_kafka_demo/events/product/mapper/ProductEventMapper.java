@@ -12,6 +12,7 @@ public interface ProductEventMapper {
     ProductEventMapper INSTANCE = Mappers.getMapper(ProductEventMapper.class);
 
     ProductCreatedEvent toProductCreatedEvent(Product product);
+
     //Событие "удаления" содержит поле "Дата удаления", которого нет в сущности
     //При маппинге заполним это поле текущей датой
     @Mapping(target = "removedAt", expression = "java(LocalDateTime.now())")

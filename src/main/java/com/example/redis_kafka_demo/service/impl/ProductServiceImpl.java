@@ -40,7 +40,6 @@ public class ProductServiceImpl implements ProductService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    //Метод для логирования результата отправки сообщения в кафку
     private void kafkaLogger(CompletableFuture<SendResult<String, ProductEvent>> future){
         future.whenComplete((result, exception) -> {
             if (exception != null) {
@@ -63,7 +62,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = ProductMapper.INSTANCE.toEntity(dto);
         productRepository.save(product);
 
-        //подготовим и отправим сообщение в кафку, залогируем результат отправки
         ProductCreatedEvent productCreatedEvent = ProductEventMapper.INSTANCE.toProductCreatedEvent(product);
         CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(added_products_topic, productCreatedEvent);
         kafkaLogger(future);
@@ -83,8 +81,9 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id, ProductDto dto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + id));
-        product = ProductMapper.INSTANCE.toEntity(dto);
-        product.setId(id);
+
+        ProductMapper.INSTANCE.updateEntityFromDto(dto, product);
+
         return productRepository.save(product);
     }
 }

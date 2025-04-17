@@ -4,6 +4,7 @@ import com.example.redis_kafka_demo.model.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.mapstruct.MappingTarget;
 
 @Mapper
 public interface ProductMapper {
@@ -13,4 +14,7 @@ public interface ProductMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     Product toEntity(ProductDto dto);
+
+    //обновление существующего объекта из DTO (используется в сервисе)
+    void updateEntityFromDto(ProductDto dto, @MappingTarget Product entity);
 }

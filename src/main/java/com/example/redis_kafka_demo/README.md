@@ -1,29 +1,35 @@
+1) Запуск приложения:
+    1.1) Запустить все сервисы в docker-compose;
+    1.2) Запустить класс RedisKafkaDemoApplication
+
+2) Перечень API;
 Просмотр всех продуктов (выдача без параметров ограничена 10 элементами):
-Метод: GET
-Адрес: http://localhost:8080/api/products/
+    Method GET
+    Adress: http://localhost:8080/api/products/
+    Example: http://localhost:8080/api/products/?page=1&size=7
 
 Просмотр продукта по ID:
-Метод: GET
-Адрес: http://localhost:8080/api/products/{ID}
-Пример: http://localhost:8080/api/products/2
+    Method: GET
+    Adress: http://localhost:8080/api/products/{ID}
+    Example: http://localhost:8080/api/products/2
 
 Создание продукта:
-Метод: POST
-Адрес: http://localhost:8080/api/products/
-BodyType: JSON
-Пример:
+    Method: POST
+    Adress: http://localhost:8080/api/products/
+    BodyType: JSON
+    Example:
 {
-"name": "Молоко козье",
+"name": "Молоко коровье",
 "description": "Молоко козье, 1.5% жирности",
 "price": 125.00,
 "quantity": 75
 }
 
 Обновление продукта:
-Метод: PUT
-Адрес: http://localhost:8080/api/products/{ID}
-BodyType: JSON
-Пример: http://localhost:8080/api/products/2
+    Method: PUT
+    Adress: http://localhost:8080/api/products/{ID}
+    BodyType: JSON
+    Example: http://localhost:8080/api/products/2
 {
 "name": "Молоко козье",
 "description": "Молоко козье, 3.2% жирности",
