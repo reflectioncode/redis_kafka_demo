@@ -6,7 +6,7 @@
 Просмотр всех продуктов (выдача без параметров ограничена 10 элементами):
     Method GET
     Adress: http://localhost:8080/api/products/
-    Example: http://localhost:8080/api/products/?page=1&size=7
+    Example: http://localhost:8080/api/products/?page=2&size=7
 
 Просмотр продукта по ID:
     Method: GET
