@@ -15,13 +15,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -54,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(pageable);
     }
 
+    @Cacheable(value = "products", key = "#id")
     public Product getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + id));
@@ -71,15 +74,19 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    @CacheEvict(value = "products", key = "#id")
     public void deleteProduct(Long id) {
-        Product deletedProduct = productRepository.findById(id).get();
-        productRepository.deleteById(id);
+        Product deletedProduct = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + id));
+
+        productRepository.delete(deletedProduct);
 
         ProductRemovedEvent productRemovedEvent = ProductEventMapper.INSTANCE.toProductRemovedEvent(deletedProduct);
         CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(removed_products_topic, productRemovedEvent);
         kafkaLogger(future);
     }
 
+    @CachePut(value = "products", key = "#id")
     public Product updateProduct(Long id, ProductDto dto) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + id));
