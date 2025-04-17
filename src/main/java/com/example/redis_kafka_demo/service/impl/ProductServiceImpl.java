@@ -1,8 +1,11 @@
 package com.example.redis_kafka_demo.service.impl;
 
-import com.example.redis_kafka_demo.events.product.ProductCreatedEvent;
+import com.example.redis_kafka_demo.events.product.ProductEventImpl.ProductCreatedEvent;
 import com.example.redis_kafka_demo.events.product.ProductEvent;
+import com.example.redis_kafka_demo.events.product.mapper.ProductEventMapper;
+import com.example.redis_kafka_demo.model.dto.request.ProductCreateRequestDto;
 import com.example.redis_kafka_demo.model.entity.Product;
+import com.example.redis_kafka_demo.model.mapper.ProductMapper;
 import com.example.redis_kafka_demo.repository.ProductRepository;
 import com.example.redis_kafka_demo.service.ProductService;
 
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-
 @Service
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
@@ -29,10 +31,10 @@ public class ProductServiceImpl implements ProductService {
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    ProductServiceImpl(ProductRepository productRepository, KafkaTemplate<String, ProductEvent> kafkaTemplate){
+    ProductServiceImpl(ProductRepository productRepository, KafkaTemplate<String, ProductEvent> kafkaTemplate) {
         this.productRepository = productRepository;
         this.kafkaTemplate = kafkaTemplate;
-    };
+    }
 
     public Page<Product> getAllProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
@@ -42,29 +44,32 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id);
     }
 
-    public void saveProduct(Product product) {
+    public Product saveProduct(ProductCreateRequestDto dto) {
+        Product product = ProductMapper.INSTANCE.toEntity(dto);
         productRepository.save(product);
-        ProductCreatedEvent productCreatedEvent = ProductCreatedEvent
-                .builder()
-                .id(product.getId())
-                .name(product.getName())
-                .price(product.getPrice())
-                .quantity(product.getQuantity())
-                .description(product.getDescription())
-                .createdAt(product.getCreatedAt())
-                .build();
 
+        //подготовим и отправим сообщение
+        ProductCreatedEvent productCreatedEvent = ProductEventMapper.INSTANCE.toProductCreatedEvent(product);
         CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(added_products_topic, productCreatedEvent);
 
         //Залогируем результат отправки сообщения
         future.whenComplete((result, exception) -> {
-            if (exception != null){
+            if (exception != null) {
                 LOGGER.error("Failed to send message", exception.getMessage());
-            }
-            else {
+            } else {
                 LOGGER.info("Succeful to send message", result.getRecordMetadata().toString());
             }
         });
+        return product;
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 }
+
+
+
+
+
 

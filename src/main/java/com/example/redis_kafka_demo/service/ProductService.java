@@ -1,5 +1,6 @@
 package com.example.redis_kafka_demo.service;
 
+import com.example.redis_kafka_demo.model.dto.request.ProductCreateRequestDto;
 import com.example.redis_kafka_demo.model.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,5 +12,6 @@ import java.util.Optional;
 public interface ProductService {
     Page<Product> getAllProducts(Pageable pageable);
     Optional<Product> getProductById(Long id);
-    void saveProduct(Product product);
+    Product saveProduct(ProductCreateRequestDto dto);
+    void deleteProduct(Long id);
 }
