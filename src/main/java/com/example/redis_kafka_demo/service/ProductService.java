@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ProductService {
     Page<Product> getAllProducts(Pageable pageable);
-    Optional<Product> getProductById(Long id);
+    Product getProductById(Long id);
     Product saveProduct(ProductDto dto);
     void deleteProduct(Long id);
     Product updateProduct(Long id, ProductDto dto);
