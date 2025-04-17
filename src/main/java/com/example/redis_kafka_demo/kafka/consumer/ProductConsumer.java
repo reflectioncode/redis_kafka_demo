@@ -22,9 +22,8 @@ public class ProductConsumer {
     @KafkaListener(topics = "product-events", groupId = "product-group")
     public void consume(ProductEvent event) {
         if (event != null && event.getProduct() != null) {
-            logger.info("✅ Received event: Type = {}, Product = {}", event.getEventType(), event.getProduct());
+            logger.info("Received event: Type = {}, Product = {}", event.getEventType(), event.getProduct());
 
-            // Сохраняем в таблицу
             var product = event.getProduct();
             ProductEventLog log = new ProductEventLog();
             log.setEventType(event.getEventType());
@@ -35,7 +34,7 @@ public class ProductConsumer {
 
             eventLogRepository.save(log);
         } else {
-            logger.warn("⚠️ Received null or incomplete ProductEvent: {}", event);
+            logger.warn("Received null or incomplete ProductEvent: {}", event);
         }
     }
 }

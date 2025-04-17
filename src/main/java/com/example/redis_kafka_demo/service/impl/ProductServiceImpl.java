@@ -20,8 +20,8 @@ public class ProductServiceImpl implements ProductService {
     private final ProductProducer productProducer;
 
     public ProductServiceImpl(ProductRepository productRepository,
-                          RedisTemplate<String, Product> redisTemplate,
-                          ProductProducer productProducer) {
+                              RedisTemplate<String, Product> redisTemplate,
+                              ProductProducer productProducer) {
         this.productRepository = productRepository;
         this.redisTemplate = redisTemplate;
         this.productProducer = productProducer;

@@ -24,7 +24,6 @@ public class KafkaConfig {
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
 
-    // Producer Configuration
     @Bean
     public ProducerFactory<String, ProductEvent> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
@@ -39,7 +38,6 @@ public class KafkaConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
-    // Consumer Configuration
     @Bean
     public ConsumerFactory<String, ProductEvent> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
