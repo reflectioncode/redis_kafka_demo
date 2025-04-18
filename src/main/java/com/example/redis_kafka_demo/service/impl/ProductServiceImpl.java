@@ -68,6 +68,8 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
 
         ProductCreatedEvent productCreatedEvent = ProductEventMapper.INSTANCE.toProductCreatedEvent(product);
+        //асинхронно отправим сообщение в кафку
+        //т.е. код продолжит своё выполнения, не дожидаясь получения уведомления о получении
         CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(added_products_topic, productCreatedEvent);
         kafkaLogger(future);
 

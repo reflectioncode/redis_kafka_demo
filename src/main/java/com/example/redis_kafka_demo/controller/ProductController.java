@@ -3,6 +3,7 @@ package com.example.redis_kafka_demo.controller;
 import com.example.redis_kafka_demo.model.dto.request.ProductDto;
 import com.example.redis_kafka_demo.model.entity.Product;
 import com.example.redis_kafka_demo.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +18,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductDto dto) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(dto));
     }
 
@@ -33,7 +34,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductDto dto) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto dto) {
             Product updatedProduct = productService.updateProduct(id, dto);
             return ResponseEntity.ok(updatedProduct);
     }

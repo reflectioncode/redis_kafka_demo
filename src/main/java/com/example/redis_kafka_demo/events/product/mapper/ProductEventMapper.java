@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+//имплементация маппера будет содержать логику работы с датой, поэтому необходимо указать импорт
 @Mapper(imports = java.time.LocalDateTime.class)
 public interface ProductEventMapper {
     ProductEventMapper INSTANCE = Mappers.getMapper(ProductEventMapper.class);
