@@ -15,10 +15,8 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
-    @Value("${kafka.topics.product.created}")
-    private String added_products_topic;
-    @Value("${kafka.topics.product.removed}")
-    private String removed_products_topic;
+    @Value("${kafka.topics.product}")
+    private String products_topic;
 
     private NewTopic createTopic(String topicName) {
         return TopicBuilder.name(topicName)
@@ -30,13 +28,9 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic productCreatedTopic() {
-        return createTopic(added_products_topic);
+        return createTopic(products_topic);
     }
 
-    @Bean
-    public NewTopic productRemovedTopic() {
-        return createTopic(removed_products_topic);
-    }
 
     @Bean
     public KafkaTemplate<String, ProductEvent> kafkaTemplate(ProducerFactory<String, ProductEvent> producerFactory) {

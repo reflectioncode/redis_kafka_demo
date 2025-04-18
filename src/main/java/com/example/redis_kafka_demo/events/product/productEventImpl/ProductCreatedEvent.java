@@ -1,5 +1,4 @@
-package com.example.redis_kafka_demo.events.product.ProductEventImpl;
-
+package com.example.redis_kafka_demo.events.product.productEventImpl;
 import com.example.redis_kafka_demo.events.product.ProductEvent;
 import lombok.*;
 
@@ -11,11 +10,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductRemovedEvent implements ProductEvent {
+public class ProductCreatedEvent implements ProductEvent {
     private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private Integer quantity;
-    private LocalDateTime removedAt;
+    private LocalDateTime createdAt;
 }

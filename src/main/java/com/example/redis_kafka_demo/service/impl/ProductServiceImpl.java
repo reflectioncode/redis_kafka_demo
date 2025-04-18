@@ -1,8 +1,8 @@
 package com.example.redis_kafka_demo.service.impl;
 
-import com.example.redis_kafka_demo.events.product.ProductEventImpl.ProductCreatedEvent;
+import com.example.redis_kafka_demo.events.product.productEventImpl.ProductCreatedEvent;
 import com.example.redis_kafka_demo.events.product.ProductEvent;
-import com.example.redis_kafka_demo.events.product.ProductEventImpl.ProductRemovedEvent;
+import com.example.redis_kafka_demo.events.product.productEventImpl.ProductRemovedEvent;
 import com.example.redis_kafka_demo.events.product.mapper.ProductEventMapper;
 import com.example.redis_kafka_demo.model.dto.request.ProductDto;
 import com.example.redis_kafka_demo.model.entity.Product;
@@ -30,10 +30,8 @@ import java.util.concurrent.CompletableFuture;
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     private KafkaTemplate<String, ProductEvent> kafkaTemplate;
-    @Value("${kafka.topics.product.created}")
-    private String added_products_topic;
-    @Value("${kafka.topics.product.removed}")
-    private String removed_products_topic;
+    @Value("${kafka.topics.product}")
+    private String products_topic;
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -71,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
         //асинхронно отправим сообщение в кафку
         //т.е. код продолжит своё выполнения, не дожидаясь получения уведомления о получении
         //при отправке сообщения не указан ключ => сообщение будет попадать в случайную доступную партицию
-        CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(added_products_topic, productCreatedEvent);
+        CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(products_topic, productCreatedEvent);
         kafkaLogger(future);
 
         return product;
@@ -85,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(deletedProduct);
 
         ProductRemovedEvent productRemovedEvent = ProductEventMapper.INSTANCE.toProductRemovedEvent(deletedProduct);
-        CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(removed_products_topic, productRemovedEvent);
+        CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(products_topic, productRemovedEvent);
         kafkaLogger(future);
     }
 
