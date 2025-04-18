@@ -24,7 +24,7 @@ public class KafkaConfig {
         return TopicBuilder.name(topicName)
                 .partitions(3) // количество партиций
                 .replicas(3) // количество реплик
-                .configs(Map.of("min.insync.replicas", "2")) // минимальное количество реплик, синхронизированных с лидером
+                .configs(Map.of("min.insync.replicas", "2")) // минимальное количество синхронизированных реплик
                 .build();
     }
 
