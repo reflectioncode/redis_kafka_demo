@@ -4,6 +4,8 @@ import com.example.demo.events.product.ProductEvent;
 import com.example.demo.events.product.productEventImpl.ProductCreatedEvent;
 import com.example.demo.events.product.productEventImpl.ProductRemovedEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -11,18 +13,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductEventListener {
 
-    @KafkaListener(topics = "your_topic_name", groupId = "product-event-group")
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductEventListener.class);
+
+    @KafkaListener(topics = "products-event-topic", groupId = "product_group")
     public void listen(ProductEvent event) {
         if (event instanceof ProductCreatedEvent) {
-            ProductCreatedEvent createdEvent = (ProductCreatedEvent) event;
-            log.info("Received Product Created Event: {}", createdEvent);
-            // Здесь вы можете добавить дополнительную логику обработки события
+            handleProductCreated((ProductCreatedEvent) event);
         } else if (event instanceof ProductRemovedEvent) {
-            ProductRemovedEvent removedEvent = (ProductRemovedEvent) event;
-            log.info("Received Product Removed Event: {}", removedEvent);
-            // Здесь вы можете добавить дополнительную логику обработки события
-        } else {
-            log.warn("Received unknown event type: {}", event.getClass().getName());
+            handleProductRemoved((ProductRemovedEvent) event);
         }
+    }
+
+    private void handleProductCreated(ProductCreatedEvent event) {
+        LOGGER.info("Received Product Created Event: {}", event);
+        // Здесь вы можете добавить дополнительную логику обработки события
+    }
+
+    private void handleProductRemoved(ProductRemovedEvent event) {
+        LOGGER.info("Received Product Removed Event: {}", event);
+        // Здесь вы можете добавить дополнительную логику обработки события
     }
 }
