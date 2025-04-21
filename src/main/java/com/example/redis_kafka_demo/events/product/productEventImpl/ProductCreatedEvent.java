@@ -2,6 +2,7 @@ package com.example.redis_kafka_demo.events.product.productEventImpl;
 import com.example.redis_kafka_demo.events.product.ProductEvent;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductCreatedEvent implements ProductEvent {
+public class ProductCreatedEvent implements ProductEvent, Serializable {
     private Long id;
     private String name;
     private String description;

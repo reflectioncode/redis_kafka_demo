@@ -3,6 +3,7 @@ package com.example.redis_kafka_demo.controller;
 import com.example.redis_kafka_demo.model.dto.request.ProductDto;
 import com.example.redis_kafka_demo.model.entity.Product;
 import com.example.redis_kafka_demo.service.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto dto) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDto dto) throws JsonProcessingException {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(dto));
     }
 
@@ -40,7 +41,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) throws JsonProcessingException {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

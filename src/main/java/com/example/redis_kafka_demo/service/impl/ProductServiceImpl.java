@@ -10,6 +10,8 @@ import com.example.redis_kafka_demo.model.mapper.ProductMapper;
 import com.example.redis_kafka_demo.repository.ProductRepository;
 import com.example.redis_kafka_demo.service.ProductService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,18 +31,19 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
-    private KafkaTemplate<String, ProductEvent> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
     @Value("${kafka.topics.product}")
     private String products_topic;
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    ProductServiceImpl(ProductRepository productRepository, KafkaTemplate<String, ProductEvent> kafkaTemplate) {
+    ProductServiceImpl(ProductRepository productRepository, KafkaTemplate<String, String> kafkaTemplate) {
         this.productRepository = productRepository;
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    private void kafkaLogger(CompletableFuture<SendResult<String, ProductEvent>> future){
+    private void kafkaLogger(CompletableFuture<SendResult<String, String>> future){
         future.whenComplete((result, exception) -> {
             if (exception != null) {
                 LOGGER.error("Failed to send message", exception.getMessage());
@@ -61,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
-    public Product saveProduct(ProductDto dto) {
+    public Product saveProduct(ProductDto dto) throws JsonProcessingException {
         Product product = ProductMapper.INSTANCE.toEntity(dto);
         productRepository.save(product);
 
@@ -69,21 +72,23 @@ public class ProductServiceImpl implements ProductService {
         //асинхронно отправим сообщение в кафку
         //т.е. код продолжит своё выполнения, не дожидаясь получения уведомления о получении
         //при отправке сообщения не указан ключ => сообщение будет попадать в случайную доступную партицию
-        CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(products_topic, productCreatedEvent);
+        String jsonMessage = objectMapper.writeValueAsString(productCreatedEvent);
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(products_topic, jsonMessage);
         kafkaLogger(future);
 
         return product;
     }
 
     @CacheEvict(value = "products", key = "#id")
-    public void deleteProduct(Long id) {
+    public void deleteProduct(Long id) throws JsonProcessingException {
         Product deletedProduct = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found with id " + id));
 
         productRepository.delete(deletedProduct);
 
         ProductRemovedEvent productRemovedEvent = ProductEventMapper.INSTANCE.toProductRemovedEvent(deletedProduct);
-        CompletableFuture<SendResult<String, ProductEvent>> future = kafkaTemplate.send(products_topic, productRemovedEvent);
+        String jsonMessage = objectMapper.writeValueAsString(productRemovedEvent);
+        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(products_topic, jsonMessage);
         kafkaLogger(future);
     }
 
