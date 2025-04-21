@@ -2,6 +2,8 @@ package com.example.redis_kafka_demo.configuration;
 
 import com.example.redis_kafka_demo.kafka.ProductEventDeserializer;
 import com.example.redis_kafka_demo.kafka.event.ProductEvent;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -23,6 +25,27 @@ public class KafkaConfig {
 
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
+
+    @Value("${kafka.topic.name}")
+    private String topicName;
+
+    @Value("${kafka.topic.product-events.partitions}")
+    private int partitions;
+
+    @Value("${kafka.topic.product-events.replication-factor}")
+    private short replicationFactor;
+
+    @Bean
+    public KafkaAdmin kafkaAdmin() {
+        Map<String, Object> configs = new HashMap<>();
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        return new KafkaAdmin(configs);
+    }
+
+    @Bean
+    public NewTopic productEventsTopic() {
+        return new NewTopic(topicName, partitions, replicationFactor);
+    }
 
     @Bean
     public ProducerFactory<String, ProductEvent> producerFactory() {

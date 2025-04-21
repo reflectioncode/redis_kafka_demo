@@ -20,6 +20,7 @@ spring:
 kafka:
   bootstrap-servers: host.docker.internal:9092
   topic:
+    name: product-events
     product-events:
       partitions: 3
       replication-factor: 1
