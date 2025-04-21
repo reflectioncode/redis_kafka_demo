@@ -87,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(deletedProduct);
 
         ProductRemovedEvent productRemovedEvent = ProductEventMapper.INSTANCE.toProductRemovedEvent(deletedProduct);
-        productRemovedEvent jsonMessage = objectMapper.w
+        String jsonMessage = objectMapper.writeValueAsString(productRemovedEvent);
         CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(products_topic, jsonMessage);
         kafkaLogger(future);
     }
