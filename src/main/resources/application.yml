@@ -1,3 +1,4 @@
 kafka:
-  topics:
-    product: "products-event-topic"
+  producer:
+    topics:
+      product: "products-event-topic"

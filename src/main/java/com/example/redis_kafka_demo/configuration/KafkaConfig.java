@@ -15,7 +15,7 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
-    @Value("${kafka.topics.product}")
+    @Value("${kafka.producer.topics.product}")
     private String products_topic;
 
     private NewTopic createTopic(String topicName) {

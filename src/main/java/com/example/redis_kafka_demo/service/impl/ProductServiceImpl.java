@@ -10,7 +10,6 @@ import com.example.redis_kafka_demo.model.mapper.ProductMapper;
 import com.example.redis_kafka_demo.repository.ProductRepository;
 import com.example.redis_kafka_demo.service.ProductService;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -32,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     private KafkaTemplate<String, ProductEvent> kafkaTemplate;
-    @Value("${kafka.topics.product}")
+    @Value("${kafka.producer.topics.product}")
     private String products_topic;
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -40,8 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductServiceImpl(ProductRepository productRepository,
-                       KafkaTemplate<String, ProductEvent> kafkaTemplate,
-                       ObjectMapper  objectMapper) {
+                       KafkaTemplate<String, ProductEvent> kafkaTemplate) {
         this.productRepository = productRepository;
         this.kafkaTemplate = kafkaTemplate;
     }
