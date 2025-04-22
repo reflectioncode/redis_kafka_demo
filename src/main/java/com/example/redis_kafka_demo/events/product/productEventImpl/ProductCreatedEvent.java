@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ProductCreatedEvent implements ProductEvent, Serializable {
+    private final String type = "productCreated";
     private Long id;
     private String name;
     private String description;

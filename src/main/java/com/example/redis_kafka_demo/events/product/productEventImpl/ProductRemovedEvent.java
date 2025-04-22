@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ProductRemovedEvent implements ProductEvent, Serializable {
+    private final String type = "productRemoved";
     private Long id;
     private String name;
     private String description;
